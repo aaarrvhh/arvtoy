@@ -1,0 +1,1 @@
+RDEPENDS_${PN}-buv-common-utils_append = " nuvoton-ipmi-oem"

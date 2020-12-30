@@ -1,0 +1,1 @@
+RDEPENDS_${PN}-extras_append = " oem-ipmi-handler"
