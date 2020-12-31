@@ -1,0 +1,2 @@
+bin_PROGRAMS=arvhelloworld
+arvhelloworld_SOURCES=helloworld.c
