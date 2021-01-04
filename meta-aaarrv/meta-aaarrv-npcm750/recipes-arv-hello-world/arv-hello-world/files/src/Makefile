@@ -1,6 +1,19 @@
 # Makefile: A standard Makefile for helloworld.c
 
-all: helloworld
+obj = helloworld.o
+target = arvhelloworld
 
+all: $(obj)
+	${CC} $(obj) -o $(target)
+
+%.o:%.c
+	${CC} -c $^ -o $@
+
+.PHONY: clean
 clean:
-   rm -f helloworld *.o
+	rm -rf $(obj) $(target)
+
+#all: helloworld
+
+#clean:
+#   rm -f helloworld *.o
