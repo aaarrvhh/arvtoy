@@ -51,7 +51,7 @@ ipmi_data_len_t data_len, ipmi_context_t context)
 void register_netfn_oem_functions()
 {
     std::cout << "Registering OEM command handlers" << std::endl;
-    ipmi_register_callback(NETFUN_OEM, 0xBA, NULL, ipmi_my_handler1, PRIVILEGE_USER);
-    ipmi_register_callback(NETFUN_OEM, 0xBE, NULL, ipmi_my_handler2, PRIVILEGE_USER);
+    ipmi_register_callback(NETFUN_OEM, 0xB3, NULL, ipmi_my_handler1, PRIVILEGE_USER);
+    ipmi_register_callback(NETFUN_OEM, 0xB4, NULL, ipmi_my_handler2, PRIVILEGE_USER);
     return;
 }

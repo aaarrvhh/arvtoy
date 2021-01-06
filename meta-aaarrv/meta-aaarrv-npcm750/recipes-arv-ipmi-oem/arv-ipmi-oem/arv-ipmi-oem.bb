@@ -36,8 +36,8 @@ S = "${WORKDIR}/git"
 #         places generated objects during a recipe's build process.
 # B = "${WORKDIR}/build"
 
-HOSTIPMI_PROVIDER_LIBRARY_append = " liboem-ipmi-handler.so"
-NETIPMI_PROVIDER_LIBRARY_append = " liboem-ipmi-handler.so"
+HOSTIPMI_PROVIDER_LIBRARY_append = " libarv-ipmi-oem.so"
+NETIPMI_PROVIDER_LIBRARY_append = " libarv-ipmi-oem.so"
 
 # Installs files to image
 FILES_${PN}_append = " ${libdir}/ipmid-providers/lib*${SOLIBS}"
