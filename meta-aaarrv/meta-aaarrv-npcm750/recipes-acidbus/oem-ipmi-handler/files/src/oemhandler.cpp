@@ -12,19 +12,32 @@ void set_dbus();
 // Declares register function with attribute "constructor".
 void register_netfn_oem_functions() __attribute__((constructor));
 
+
+// busctl get-property xyz.openbmc_project.Hwmon-4134958689.Hwmon1 
+//               /xyz/openbmc_project/sensors/voltage/ADC8 
+//               xyz.openbmc_project.Sensor.Value Value
+static constexpr auto vsensorserv =  "xyz.openbmc_project.Hwmon-4134958689.Hwmon1";
+static constexpr auto vsensorObj = "/xyz/openbmc_project/sensors/voltage/ADC8";
+static constexpr auto vsensorIntf = "xyz.openbmc_project.Sensor.Value";
+static constexpr auto vsensorProp = "Value";
+
 int get_dbus()
 {
     using Value = std::variant<int32_t>;
     Value value;
     auto sdbus = sdbusplus::bus::new_default();
-    auto sdmethod = sdbus.new_method_call("xyz.openbmc_project.hello_dbus", "/xyz/openbmc_project/hello_dbus/custom", "org.freedesktop.DBus.Properties", "Get");
-    sdmethod.append("xyz.openbmc_project.hello_dbus.custom.Example", "OemInt");
+    auto sdmethod = sdbus.new_method_call(\
+        vsensorserv, \
+        vsensorObj, \
+        "org.freedesktop.DBus.Properties", \
+        "Get");
+    sdmethod.append(vsensorIntf, vsensorProp);
     auto reply = sdbus.call(sdmethod);
     reply.read(value);
-    auto oemInt = std::get<int32_t>(value);
-    std::cout<<"OemInt: "<<oemInt<<"\n";
+    auto arv_result = std::get<int32_t>(value);
+    std::cout << "arv_result: " << arv_result << "\n";
 
-    return oemInt; 
+    return arv_result; 
 }
 
 void set_dbus()
@@ -45,12 +58,14 @@ ipmi_ret_t ipmi_my_handler1(ipmi_netfn_t netfn, ipmi_cmd_t cmd,
     std::cout << __FUNCTION__ << " entered! " << std::endl;
 
     ipmi_ret_t rc = IPMI_CC_OK;
-    //uint8_t rsp[] = {0xFF, 0x00, 0xAA, 0x55};
+    uint8_t rspa[] = {0xFF, 0x00, 0xAA, 0x55, 0x32, 0xBA};
+    std::cout << "rspa - " << rspa << std::endl;
     uint8_t rsp = get_dbus();
-    //memcpy(response, &rsp, 4);
+    std::cout << "=== aaarrv get finished === " << rsp << std::endl;
+    //memcpy(response, &rsp, 6);
     memcpy(response, &rsp, 1);
     //*data_len = 4;
-    *data_len = 1;
+    *data_len = 0;
 
     return rc;
 }
@@ -63,10 +78,25 @@ ipmi_ret_t ipmi_my_handler2(ipmi_netfn_t netfn, ipmi_cmd_t cmd,
     std::cout << __FUNCTION__ << " entered! " << std::endl;
 
     ipmi_ret_t rc = IPMI_CC_OK;
-    //uint8_t rsp[] = {0x55, 0xAA, 0x00, 0xFF};
-    //memcpy(response, &rsp, 4);
-	set_dbus();
-    *data_len = 0;
+    uint8_t rsp[6] = {0x55, 0xAA, 0x00, 0xFF, 0x32, 0xBE};
+
+    std::cout << "rsp[0] - " << std::to_string(rsp[0]) << std::endl;
+    std::cout << "rsp[1] - " << std::to_string(rsp[1]) << std::endl;
+    std::cout << "rsp std::get  " ;
+    for (auto& rsps : rsp){
+        std::cout << std::get<std::int8_t>(rsps) << " " ;
+    }
+    std::cout << std::endl;
+    std::cout << "rsp to_string " ;
+    for(int arvi = 0; arvi<=5; arvi++) {
+      std::cout << std::to_string(rsp[arvi]) <<  " ";  }
+    std::cout << std::endl;
+
+    memcpy(response, &rsp, 6);
+        std::cout << "response - " << response << std::endl;
+    
+	// set_dbus();
+    *data_len = 6;
 
     return rc;
 }

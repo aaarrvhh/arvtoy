@@ -16,8 +16,10 @@ AC_PROG_LN_S
 AC_PROG_MKDIR_P
 
 # Check for sdbus++ tool
-AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
-AS_IF([test "x$SDBUSPLUSPLUS" == "x"], AC_MSG_ERROR([Cannot find sdbus++]))
+#PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus],, \
+#    AC_MSG_ERROR(["Requires sdbusplus package."]))
+#AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
+#AS_IF([test "x$SDBUSPLUSPLUS" == "x"], AC_MSG_ERROR([Cannot find sdbus++]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AX_CXX_COMPILE_STDCXX_17([noext])

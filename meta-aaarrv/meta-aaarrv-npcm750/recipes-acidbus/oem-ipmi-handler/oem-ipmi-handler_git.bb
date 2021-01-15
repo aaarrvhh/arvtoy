@@ -8,8 +8,10 @@ PR = "r0"
 inherit autotools
 inherit obmc-phosphor-ipmiprovider-symlink
 
-DEPENDS += "phosphor-ipmi-host systemd sdbusplus sdbusplus-native sdbus++-native"
-DEPENDS += "autoconf-archive-native"
+DEPENDS += " phosphor-ipmi-host systemd sdbusplus "
+# DEPENDS += " sdbusplus-native "
+# DEPENDS += " sdbus++-native "
+DEPENDS += " autoconf-archive-native "
 
 SRC_URI = "file://src"
 SRCREV = "${AUTOREV}"

@@ -1,0 +1,8 @@
+Common targets are:
+     obmc-phosphor-image
+
+Make buv-entity image by following command:
+     DISTRO=buv-entity bitbake obmc-phosphor-image
+
+copy this from ./meta-evb/meta-evb-nuvoton/meta-buv-runbmc/conf/conf-notes.txt
+- aaarv yyh
