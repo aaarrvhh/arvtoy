@@ -80,21 +80,35 @@ ipmi_ret_t ipmi_my_handler2(ipmi_netfn_t netfn, ipmi_cmd_t cmd,
     ipmi_ret_t rc = IPMI_CC_OK;
     uint8_t rsp[6] = {0x55, 0xAA, 0x00, 0xFF, 0x32, 0xBE};
 
-    std::cout << "rsp[0] - " << std::to_string(rsp[0]) << std::endl;
-    std::cout << "rsp[1] - " << std::to_string(rsp[1]) << std::endl;
-    std::cout << "rsp std::get  " ;
+    std::cout << "rsp std::hex  " ;
     for (auto& rsps : rsp){
-        std::cout << std::get<std::int8_t>(rsps) << " " ;
+        std::cout << std::hex << std::stoi(std::to_string(rsps),NULL,16) << " " ;
     }
     std::cout << std::endl;
+    // cout->print result() - rsp std::hex  85 170 0 255 50 190
+
     std::cout << "rsp to_string " ;
     for(int arvi = 0; arvi<=5; arvi++) {
       std::cout << std::to_string(rsp[arvi]) <<  " ";  }
     std::cout << std::endl;
+    // cout->print result() - rsp to_string 85 170 0 255 50 190
+
+    std::cout << "rsp static cast " ;
+    for(int arvi = 0; arvi<=5; arvi++) {
+      std::cout << static_cast<int>(rsp[arvi]) <<  " ";  }
+    std::cout << std::endl;
+    // cout->print result() - rsp static cast 55 aa 0 ff 32 be
 
     memcpy(response, &rsp, 6);
         std::cout << "response - " << response << std::endl;
-    
+    unsigned char arvrsp[10];
+    std::cout << "response - static_cast ";
+    memcpy(&arvrsp, response, 6);
+    for(int arvi =0 ; arvi<=5 ; arvi++) {
+        std::cout << static_cast<int>(arvrsp[arvi]) << " "; }
+    std::cout << std::endl;
+
+
 	// set_dbus();
     *data_len = 6;
 
