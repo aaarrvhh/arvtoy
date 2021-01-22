@@ -23,6 +23,8 @@ static constexpr auto vsensorProp = "Value";
 
 int get_dbus()
 {
+
+    std::cout << __FUNCTION__ << " entered! " << std::endl;
     using Value = std::variant<int32_t>;
     Value value;
     auto sdbus = sdbusplus::bus::new_default();
@@ -36,7 +38,9 @@ int get_dbus()
     reply.read(value);
     auto arv_result = std::get<int32_t>(value);
     std::cout << "arv_result: " << arv_result << "\n";
+    std::cout << "arv_result_str: " << std::to_string(arv_result) << "\n";
 
+    std::cout << __FUNCTION__ << " exit! " << std::endl;
     return arv_result; 
 }
 
@@ -59,9 +63,15 @@ ipmi_ret_t ipmi_my_handler1(ipmi_netfn_t netfn, ipmi_cmd_t cmd,
 
     ipmi_ret_t rc = IPMI_CC_OK;
     uint8_t rspa[] = {0xFF, 0x00, 0xAA, 0x55, 0x32, 0xBA};
-    std::cout << "rspa - " << rspa << std::endl;
+
+    std::cout << "rspa static cast " ;
+    for(int arvi = 0; arvi<=5; arvi++) {
+      std::cout << static_cast<int>(rspa[arvi]) <<  " ";  }
+    std::cout << std::endl;
+    // cout->print result() - rsp static cast 55 aa 0 ff 32 be
+
     uint8_t rsp = get_dbus();
-    std::cout << "=== aaarrv get finished === " << rsp << std::endl;
+    std::cout << "=== aaarrv get dbus === " << static_cast<int>(rsp) << std::endl;
     //memcpy(response, &rsp, 6);
     memcpy(response, &rsp, 1);
     //*data_len = 4;
@@ -102,6 +112,7 @@ ipmi_ret_t ipmi_my_handler2(ipmi_netfn_t netfn, ipmi_cmd_t cmd,
     memcpy(response, &rsp, 6);
         std::cout << "response - " << response << std::endl;
     unsigned char arvrsp[10];
+
     std::cout << "response - static_cast ";
     memcpy(&arvrsp, response, 6);
     for(int arvi =0 ; arvi<=5 ; arvi++) {
