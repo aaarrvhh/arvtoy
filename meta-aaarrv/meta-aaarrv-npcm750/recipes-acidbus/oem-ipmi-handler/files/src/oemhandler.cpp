@@ -21,24 +21,28 @@ static constexpr auto vsensorObj = "/xyz/openbmc_project/sensors/voltage/ADC8";
 static constexpr auto vsensorIntf = "xyz.openbmc_project.Sensor.Value";
 static constexpr auto vsensorProp = "Value";
 
+static constexpr auto vpropertyIntf = "org.freedesktop.DBus.Properties";
+
 int get_dbus()
 {
 
     std::cout << __FUNCTION__ << " entered! " << std::endl;
-    using Value = std::variant<int32_t>;
+    using Value = std::variant<int32_t, double>;
     Value value;
     auto sdbus = sdbusplus::bus::new_default();
     auto sdmethod = sdbus.new_method_call(\
         vsensorserv, \
         vsensorObj, \
-        "org.freedesktop.DBus.Properties", \
+        vpropertyIntf, \
         "Get");
     sdmethod.append(vsensorIntf, vsensorProp);
     auto reply = sdbus.call(sdmethod);
     reply.read(value);
-    auto arv_result = std::get<int32_t>(value);
+        
+    auto arv_result = std::get<double>(value);
     std::cout << "arv_result: " << arv_result << "\n";
     std::cout << "arv_result_str: " << std::to_string(arv_result) << "\n";
+    std::cout << "arv_result_static_cast: " << static_cast<float>(arv_result) << std::endl ;
 
     std::cout << __FUNCTION__ << " exit! " << std::endl;
     return arv_result; 
